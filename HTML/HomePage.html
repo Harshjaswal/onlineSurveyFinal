@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <title>Welcome to the voting portal.</title>
+    <h1>Voting Portal</h1>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.1.js"></script>
+
+</head>
+<script type="text/javascript">
+    var ip;
+    var limitSelection = 3;
+    $(document).ready(function () {
+        $.getJSON('https://api.ipify.org?format=jsonp&callback=?', function (data) {
+            ip = data.ip;
+            //python api request
+            if (false) {
+                location.href = "../Html/VotingResults.html"
+            }
+            else {
+                $("#questionLabel").html("some value");
+                for (var i = 0; i < 10; i++)
+                {
+                    $('#VotingOptionsTd').append('<input type="checkbox" name="Vote" value="val'+i+'">'+i+'<br />');
+                }
+                $('.VotingOptions :checkbox').change(function () {
+                    var $cs = $(this).closest('.VotingOptions').find(':checkbox:checked');
+                    if ($cs.length > limitSelection) {
+                        this.checked = false;
+                    }
+                });
+            }
+        });
+    });
+
+    function submitVote() {
+        var favorite = [];
+        $.each($("input[name='Vote']:checked"), function () {
+            favorite.push($(this).val());
+        });
+        if (favorite.length < limitSelection) {
+            alert("Please select minimum " + limitSelection + " options");
+        }
+        else {
+            //alert("My selected options are: " + favorite.join(", "));
+            location.href = "../Html/VotingResults.html";
+        }
+    }
+    function adminLogin() {
+        var userName = $("#userName").val();
+        var password = $("#password").val();
+        if (userName == "Admin" && password == "Admin") {
+            location.href = "../Html/AdminPage.html";
+        }
+        else {
+            alert("User name of password is incorrect.");
+        }
+    }
+</script>
+<body style="background: beige;">
+    <div id="adminDiv" style="float:right;border: inset;margin-right: 10px;background: bisque;">
+        <h3>Admin Login:</h3>
+        <table>
+            <tr>
+                <td><label>User Name:</label></td>
+                <td><input type="text" id="userName" /></td>
+            </tr>
+            <tr>
+                <td><label>Password:</label></td>
+                <td><input type="password" id="password" /></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="button" id="loginButton" value="Login" onclick="adminLogin()" /></td>
+            </tr>
+        </table>
+    </div>
+    <div id="votingPortalDiv" style="float:left;margin-left: 10px;background: cornflowerblue;">
+        <table>
+            <tr>
+                <td>
+                    <label id="questionLabel"></label>
+                </td>
+            </tr>
+            <tr id="VotingOptionsTr" class="VotingOptions">
+                <td id="VotingOptionsTd"></td>
+            </tr>
+            </tr>
+            <tr>
+                <td>
+                    <button value="submit" id="submitVoteButton" onclick="submitVote()">Submit</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

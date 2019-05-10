@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.1.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            for (var i = 0; i < 10; i++) {
+                $("#titleLabel").html("some value");
+                $('#surveyDataTable').append('<tr><td>Name'+1+'</td><td>'+i*2+'</td><td>'+i*10+'</td>');
+            }
+        });
+        function updateTheMaxValueOfUserChoice() {
+            var totalNoOfChoices = $('#totalNoOfChoices').val();
+            $("#totalNoOfUserChoices").attr({
+                "max": totalNoOfChoices,  
+                "min": 1         
+            });
+            var choiceTable = $('#choiceTable');
+            choiceTable.empty();
+            for (var i = 1; i <= totalNoOfChoices; i++) {
+                choiceTable.append('<tr><td>Choice '+i+'</td><td><input type="text" id="choice'+i+'"/></td></tr>')
+            }
+        }
+        function CreateSurvey() {
+            var title = $('#titleTextbox').val();
+            var noOfTotalChoices = $('#totalNoOfChoices').val();
+            var noOfUserChoices = $('#totalNoOfUserChoices').val();
+            if (title == "" || title == undefined) {
+                alert("Please add a valid title");
+                return;
+            }
+            if (isNaN(noOfTotalChoices) || noOfTotalChoices < 1) {
+                alert("Please enter a valid postive integer number for Total no. of options");
+                return;
+            }
+            if (isNaN(noOfUserChoices) || noOfUserChoices < 1) {
+                alert("Please enter a valid postive integer number for Total no. of options user can select");
+                return;
+            }
+            if (noOfUserChoices > noOfTotalChoices) {
+                alert("Total no. of options user can select cannot be greater than Total no. of options");
+                return
+            }
+            var choices=[];
+            for (var i = 1; i <= noOfTotalChoices; i++) {
+                var choice = $('#choice' + i).val();
+                if (choice == "" || choice == undefined) {
+                    alert("Please enter a valid choice " + i);
+                    return;
+                }
+                else
+                    choices[i - 1] = choice;
+                console.log(choices);
+            }
+        }
+
+    </script>
+</head>
+<body style="background: beige;">
+    <h1>Admin Page</h1>
+    <div style="float:right;background: burlywood;">
+        <label>Current Survey</label><br /><br />
+        <label id="titleLabel">Title of the survey</label>
+        <table border="1" id="surveyDataTable">
+            <tr>
+                <th>
+                    Title
+                </th>
+                <th>
+                    Number of votes
+                </th>
+                <th>
+                    Percentage
+                </th>
+            </tr>
+        </table>
+    </div>
+    <div style="float:left;background: darkkhaki;">
+        <label>
+            Create new survey
+        </label><br /><br />
+        <table>
+            <tr>
+                <td>
+                    <label>Title:</label>
+                </td>
+                <td>
+                    <input type="text" id="titleTextbox" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Total no. of options </label>
+                </td>
+                <td>
+                    <input type='number' id='totalNoOfChoices' min='1' max="100" onchange="updateTheMaxValueOfUserChoice()"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Total no. of options user can select</label>
+                </td>
+                <td>
+                    <input type='number' id='totalNoOfUserChoices' min='1' max="100"/>
+                </td>
+            </tr>
+        </table>
+        <table id="choiceTable"></table>
+        <input style="margin-left: 110px;" type="button" value="Create" id="createSurveyButton" onclick="CreateSurvey()" />
+    </div>
+</body>
+</html>
